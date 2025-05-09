@@ -8,21 +8,25 @@ import 'package:teste_flutter/shared/widgets/modal.widget.dart';
 import 'package:teste_flutter/shared/widgets/primary_button.widget.dart';
 import 'package:teste_flutter/shared/widgets/secondary_button.widget.dart';
 
-class EditCustomerModal extends StatefulWidget {
-  const EditCustomerModal({super.key, this.customer});
+class CreateOrEditCustomerModal extends StatefulWidget {
+  const CreateOrEditCustomerModal({Key? key, this.customerEntity, this.onSave})
+      : super(key: key);
 
-  final CustomerEntity? customer;
+  final CustomerEntity? customerEntity;
+  final Function(CustomerEntity)? onSave;
 
   @override
-  State<EditCustomerModal> createState() => _EditCustomerModalState();
+  State<CreateOrEditCustomerModal> createState() =>
+      _CreateOrEditCustomerModalState();
 }
 
-class _EditCustomerModalState extends State<EditCustomerModal> {
-  CustomerEntity? get customer => widget.customer;
+class _CreateOrEditCustomerModalState extends State<CreateOrEditCustomerModal> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final CustomersStore customersStore = GetIt.I<CustomersStore>();
+
+  CustomerEntity? get customer => widget.customerEntity;
 
   @override
   void initState() {
@@ -42,7 +46,9 @@ class _EditCustomerModalState extends State<EditCustomerModal> {
       phone: phoneController.text,
     );
 
-    if (customer == null) {
+    if (widget.onSave != null) {
+      widget.onSave!(newCustomer);
+    } else if (customer == null) {
       customersStore.addCustomer(newCustomer);
     } else {
       customersStore.updateCustomer(newCustomer);
@@ -62,7 +68,7 @@ class _EditCustomerModalState extends State<EditCustomerModal> {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Modal(
+      child: ModalWidget(
         width: 280,
         title: '${customer == null ? 'Novo' : 'Editar'} cliente',
         content: [
@@ -86,8 +92,13 @@ class _EditCustomerModalState extends State<EditCustomerModal> {
         actionsAlignment: MainAxisAlignment.end,
         actions: [
           SecondaryButton(
-              onPressed: () => Navigator.of(context).pop(), text: 'Cancelar'),
-          PrimaryButton(onPressed: handleSave, text: 'Salvar'),
+            onPressed: () => Navigator.of(context).pop(),
+            text: 'Cancelar',
+          ),
+          PrimaryButton(
+            onPressed: handleSave,
+            text: 'Salvar',
+          ),
         ],
       ),
     );

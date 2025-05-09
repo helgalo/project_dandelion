@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Modal extends StatelessWidget {
+class ModalWidget extends StatelessWidget {
   final String? title;
   final Widget? titleWidget;
   final List<Widget> content;
@@ -13,7 +13,7 @@ class Modal extends StatelessWidget {
   final MainAxisSize contentMainAxisSize;
   final MainAxisAlignment actionsAlignment;
 
-  const Modal({
+  const ModalWidget({
     super.key,
     this.title,
     this.titleWidget,

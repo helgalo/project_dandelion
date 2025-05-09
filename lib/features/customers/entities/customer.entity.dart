@@ -11,7 +11,7 @@ class CustomerEntity {
 
   const CustomerEntity.empty(this.name)
       : id = 0,
-        phone = 'Não informado';
+        phone = '';
 
   CustomerEntity copyWith({
     String? name,
